@@ -10,7 +10,6 @@ body,
 .messages {
   height: 440px;
   overflow-y: scroll;
-  margin-bottom: 2em;
 }
 
 /* MessageForm.js */
@@ -27,4 +26,13 @@ body,
 .message__self {
   border-left: 2px solid orange;
   padding-left: 8px;
+}
+
+.message__image {
+  padding: 1em;
+}
+
+/* ProgressBar.js */
+.progress__bar {
+  margin: 0.3em 0 0 0 !important;
 }
