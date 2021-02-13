@@ -89,6 +89,7 @@ class MessageForm extends React.Component {
                         const percentUploaded = Math.round(
                             (snap.bytesTransferred / snap.totalBytes) * 100
                         );
+                        this.props.isProgressBarVisible(percentUploaded)
                         this.setState({ percentUploaded });
                     },
                     err => {
@@ -165,6 +166,7 @@ class MessageForm extends React.Component {
                         icon="edit"
                     />
                     <Button
+                        disabled={uploadState === 'uploading'}
                         color="teal"
                         onClick={this.openModal}
                         content="Upload Media"

@@ -11,7 +11,12 @@ class Messages extends React.Component {
         channel: this.props.currentChannel,
         user: this.props.currentUser,
         messagesLoading: true,
-        messages: []
+        messages: [],
+        progressBar: false,
+        numUniqueUsers: '',
+        searchTerm: '',
+        searchLoading: false,
+        searchResults: []
     }
 
     componentDidMount() {
@@ -21,19 +26,41 @@ class Messages extends React.Component {
         }
     }
 
-    addListners = channelId => {
+    addListners = (channelId) => {
         this.addMessageListner(channelId);
+
+    }
+    handleSearchChange = event => {
+        this.setState({
+            searchTerm: event.target.value,
+            searchLoading: true
+        }, () => this.handleSearchMessages())
+    }
+    handleSearchMessages = () => {
+        const channelMessages = [...this.state.messages]
+
+        const regex = new RegExp(this.state.searchTerm, 'gi');
+        const searchResults = channelMessages.reduce((acc, message) => {
+            if (message.content && message.content.match(regex) || message.user.name.match(regex)) {
+                acc.push(message)
+            }
+            return acc
+        }, [])
+
+        this.setState({ searchResults })
+        setTimeout(() => this.setState({ searchLoading: false }), 1000)
     }
     addMessageListner = channelId => {
         let loadMessages = [];
         this.state.messagesRef.child(channelId).on('child_added', snap => {
             loadMessages.push(snap.val())
-            console.log(loadMessages)
+            // console.log(loadMessages)
             this.setState({
                 messages: loadMessages,
-                messagesLoading: true
+                messagesLoading: false
             })
         })
+        this.countUniqueUsers(loadMessages)
     }
     displayMessages = (messages) => (
         messages.length > 0 && messages.map(message => (
@@ -45,20 +72,54 @@ class Messages extends React.Component {
             />
         ))
     )
+    isProgressBarVisible = (percent) => {
+        if (percent > 0) {
+            this.setState({ progressBar: true })
+        }
+    }
+
+
+    displayChannelName = (channel) => channel ? `${channel.name}` : ''
+
+    countUniqueUsers = messages => {
+        const uniqueUsers = messages.reduce((acc, message) => {
+            if (!acc.includes(message.user.name)) {
+                acc.push(message.user.name)
+            }
+            return acc
+        }, [])
+
+        const numUniqueUsers = `${uniqueUsers.length} users`;
+        this.setState({
+            numUniqueUsers
+        })
+    }
+
     render() {
-        const { messagesRef, channel, user, messages, messagesLoading } = this.state;
+        const { searchTerm, searchResults, messagesRef, channel, user, messages, messagesLoading, progressBar, numUniqueUsers, searchLoading } = this.state;
         return (
             <React.Fragment>
-                <MessagesHeader />
+                <MessagesHeader
+
+                    handleSearchChange={this.handleSearchChange}
+                    channelName={this.displayChannelName(channel)}
+                    numUniqueUsers={numUniqueUsers}
+                    searchLoading={searchLoading}
+                />
 
                 <Segment>
-                    <Comment.Group className="messages">
+                    <Comment.Group className={progressBar ? 'messages__progress' : "messages"}>
 
-                        {this.displayMessages(messages)}
+                        {searchTerm ? this.displayMessages(searchResults) : this.displayMessages(messages)}
                     </Comment.Group>
                 </Segment>
 
-                <MessageForm messagesRef={messagesRef} currentChannel={channel} currentUser={user} />
+                <MessageForm
+                    messagesRef={messagesRef}
+                    currentChannel={channel}
+                    currentUser={user}
+                    isProgressBarVisible={this.isProgressBarVisible}
+                />
             </React.Fragment>
         );
     }
