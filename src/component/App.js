@@ -8,7 +8,9 @@ import SidePanel from "./SidePanel/SidePanel";
 
 const App = ({ currentUser, currentChannel, isPrivateChannel, userPosts }) => (
   <Grid columns="equal" className="app" style={{ background: '#eee' }}>
-    <ColorPanel />
+    <ColorPanel
+      key={currentUser && currentUser.name}
+      currentUser={currentUser} />
     <SidePanel
       key={currentUser && currentUser.uid}
       currentUser={currentUser} />
@@ -25,7 +27,7 @@ const App = ({ currentUser, currentChannel, isPrivateChannel, userPosts }) => (
 
     <Grid.Column width="4" >
       <MetaPanel
-        key={currentChannel && currentChannel.id}
+        key={currentChannel && currentChannel.name}
         isPrivateChannel={isPrivateChannel}
         currentChannel={currentChannel}
         userPosts={userPosts}
