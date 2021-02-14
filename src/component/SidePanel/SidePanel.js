@@ -20,7 +20,8 @@ export default class SidePanel extends Component {
 
 
                 <UserPanel currentUser={currentUser} />
-                <Starred />
+                <Starred currentUser={currentUser} />
+
                 <Channels currentUser={currentUser} />
                 <DirectMessages currentUser={currentUser} />
 
