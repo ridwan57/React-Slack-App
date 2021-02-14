@@ -9,6 +9,7 @@ import ProgressBar from "./ProgressBar";
 class MessageForm extends React.Component {
     state = {
         storageRef: firebase.storage().ref(),
+        typingRef: firebase.database().ref('typing'),
         uploadTask: null,
         uploadState: "",
         percentUploaded: 0,
@@ -143,6 +144,17 @@ class MessageForm extends React.Component {
                 });
             });
     };
+    handleOnKeyDown = () => {
+        const { message, typingRef, channel, user } = this.state
+        if (message) {
+            typingRef
+                .child(channel.id)
+                .child(user.uid)
+                .set(user.displayName)
+
+        }
+        else{}
+    }
 
     render() {
         const { errors, message, loading, modal, uploadState, percentUploaded } = this.state;
@@ -150,6 +162,7 @@ class MessageForm extends React.Component {
         return (
             <Segment className="message__form">
                 <Input
+                    onKeyDown={this.handleOnKeyDown}
                     fluid
                     name="message"
                     onChange={this.handleChange}

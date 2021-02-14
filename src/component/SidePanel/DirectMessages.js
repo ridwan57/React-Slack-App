@@ -97,7 +97,7 @@ class DirectMessages extends Component {
                         <Icon name='mail' />
                         DIRECT MESSAGES
                     </span>
-                    {users.length}
+                    ({users.length})
                 </Menu.Item>
                 {users.map(user => (
 
