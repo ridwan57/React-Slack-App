@@ -78,7 +78,7 @@ class UserPanel extends React.Component {
     uploadCroppedImage = () => {
         const { storageRef, userRef, blob, metadata } = this.state
         storageRef
-            .child(`avartars/user-${userRef.uid}`)
+            .child(`avartars/user/${userRef.uid}`)
             .put(blob, metadata)
             .then(snap => {
                 snap.ref.getDownloadURL().then(getDownloadURL => {

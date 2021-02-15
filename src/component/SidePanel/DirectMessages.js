@@ -17,6 +17,14 @@ class DirectMessages extends Component {
             this.addListeners(this.state.user.uid)
         }
     }
+    componentWillUnmount() {
+        this.removeListeners()
+    }
+    removeListeners = () => {
+        this.state.usersRef.off()
+        this.state.presenceRef.off()
+        this.state.connectedRef.off()
+    }
     addListeners = uid => {
         let loadedUsers = [];
         this.state.usersRef.on('child_added', snap => {
@@ -97,7 +105,7 @@ class DirectMessages extends Component {
                         <Icon name='mail' />
                         DIRECT MESSAGES
                     </span>
-                    ({users.length})
+                    {"  "} ({users.length})
                 </Menu.Item>
                 {users.map(user => (
 
