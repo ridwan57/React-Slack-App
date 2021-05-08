@@ -1,66 +1,72 @@
-import reportWebVitals from './reportWebVitals';
+import reportWebVitals from "./reportWebVitals";
 
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './component/App';
-import './index.css';
-import { BrowserRouter as Router, Route, Switch, withRouter } from 'react-router-dom';
-import Login from './component/Auth/Login';
-import Register from './component/Auth/Register';
-import firebase from './firebase/firebase'
-import 'semantic-ui-css/semantic.min.css';
+import React, { useEffect, useState } from "react";
+import ReactDOM from "react-dom";
+import App from "./component/App";
+import "./index.css";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch,
+  withRouter,
+} from "react-router-dom";
+import Login from "./component/Auth/Login";
+import Register from "./component/Auth/Register";
+import firebase from "./firebase/firebase";
+import "semantic-ui-css/semantic.min.css";
 import { createStore } from "redux";
-import { Provider, connect } from "react-redux";
+import { Provider, connect, useSelector, useDispatch } from "react-redux";
 import { composeWithDevTools } from "redux-devtools-extension";
-import rootReducer from './reducers/index';
-import { setUser, clearUser } from './actions/index'
-import Spinner from './Spinner';
+import rootReducer from "./reducers/index";
+import { setUser, clearUser } from "./actions/index";
+import Spinner from "./Spinner";
 const store = createStore(rootReducer, composeWithDevTools());
 
-class Root extends React.Component {
-	componentDidMount() {
-		firebase.auth().onAuthStateChanged(user => {
-			if (user) {
-				// console.log(user);
-				this.props.setUser(user);
-				this.props.history.push("/");
-			} else {
-				this.props.history.push("/login");
-				this.props.clearUser();
-			}
-		});
-	}
+const Root = () => {
+  const { isLoading } = useSelector((state) => ({ ...state.user }));
+  const dispatch = useDispatch();
 
-	render() {
-		return this.props.isLoading ? (
-			<Spinner />
-		) : (
-				<Switch>
-					<Route exact path="/" component={App} />
-					<Route path="/login" component={Login} />
-					<Route path="/register" component={Register} />
-				</Switch>
-			);
-	}
-}
+  useEffect(() => {
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        // console.log(user);
+        dispatch(setUser(user));
+        this.props.history.push("/");
+      } else {
+        this.props.history.push("/login");
+        dispatch(clearUser());
+      }
+    });
+  }, []);
 
-const mapStateFromProps = state => ({
-	isLoading: state.user.isLoading
-});
+  return isLoading ? (
+    <Spinner />
+  ) : (
+    <Switch>
+      <Route exact path="/" component={App} />
+      <Route path="/login" component={Login} />
+      <Route path="/register" component={Register} />
+    </Switch>
+  );
+};
 
-const RootWithAuth = withRouter(
-	connect(
-		mapStateFromProps,
-		{ setUser, clearUser }
-	)(Root)
-);
+// const mapStateFromProps = state => ({
+// 	isLoading: state.user.isLoading
+// });
+
+// const RootWithAuth = withRouter(
+// 	connect(
+// 		mapStateFromProps,
+// 		{ setUser, clearUser }
+// 	)(Root)
+// );
 
 ReactDOM.render(
-	<Provider store={store}>
-		<Router>
-			<RootWithAuth />
-		</Router>
-	</Provider>,
-	document.getElementById("root")
+  <Provider store={store}>
+    <Router>
+      <Root />
+    </Router>
+  </Provider>,
+  document.getElementById("root")
 );
 reportWebVitals();
