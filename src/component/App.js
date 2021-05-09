@@ -24,12 +24,7 @@ const App = () => {
       className="app"
       style={{ background: secondaryColor }}
     >
-      <ColorPanel
-      // key={currentUser?.name}
-      // currentUser={currentUser}
-      // primaryColor={primaryColor}
-      // secondaryColor={secondaryColor}
-      />
+      <ColorPanel />
       <SidePanel
         key={currentUser?.uid}
         currentUser={currentUser}
@@ -47,10 +42,10 @@ const App = () => {
 
       <Grid.Column width="4">
         <MetaPanel
-          key={currentChannel && currentChannel.name}
-          isPrivateChannel={isPrivateChannel}
-          currentChannel={currentChannel}
-          userPosts={userPosts}
+          // key={currentChannel && currentChannel.name}
+          // isPrivateChannel={isPrivateChannel}
+          // currentChannel={currentChannel}
+          // userPosts={userPosts}
         />
       </Grid.Column>
     </Grid>
