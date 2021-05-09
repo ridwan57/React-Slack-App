@@ -6,7 +6,8 @@ import ColorPanel from "./ColorPanel/ColorPanel";
 import Messages from "./Messages/Messages";
 import MetaPanel from "./MetaPanel/MetaPanel";
 import SidePanel from "./SidePanel/SidePanel";
-
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const App = () => {
   const { currentUser } = useSelector(selectUser);
 
@@ -24,7 +25,8 @@ const App = () => {
       className="app"
       style={{ background: secondaryColor }}
     >
-      <ColorPanel />
+      <ToastContainer />
+      {/* <ColorPanel /> */}
       <SidePanel
         key={currentUser?.uid}
         currentUser={currentUser}
@@ -34,18 +36,18 @@ const App = () => {
       <Grid.Column style={{ marginLeft: 320 }}>
         <Messages
           key={currentChannel && currentChannel.id}
-          currentChannel={currentChannel}
-          currentUser={currentUser}
-          isPrivateChannel={isPrivateChannel}
+          // currentChannel={currentChannel}
+          // currentUser={currentUser}
+          // isPrivateChannel={isPrivateChannel}
         />
       </Grid.Column>
 
       <Grid.Column width="4">
         <MetaPanel
-          // key={currentChannel && currentChannel.name}
-          // isPrivateChannel={isPrivateChannel}
-          // currentChannel={currentChannel}
-          // userPosts={userPosts}
+        // key={currentChannel && currentChannel.name}
+        // isPrivateChannel={isPrivateChannel}
+        // currentChannel={currentChannel}
+        // userPosts={userPosts}
         />
       </Grid.Column>
     </Grid>
