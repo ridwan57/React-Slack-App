@@ -1,5 +1,6 @@
 import { useSelector } from "react-redux";
 import { Grid } from "semantic-ui-react";
+import { selectColors, selectUser } from "../selectors";
 import "./App.css";
 import ColorPanel from "./ColorPanel/ColorPanel";
 import Messages from "./Messages/Messages";
@@ -7,7 +8,7 @@ import MetaPanel from "./MetaPanel/MetaPanel";
 import SidePanel from "./SidePanel/SidePanel";
 
 const App = () => {
-  const { currentUser } = useSelector((state) => ({ ...state.user }));
+  const { currentUser } = useSelector(selectUser);
 
   const {
     currentChannel,
@@ -15,9 +16,7 @@ const App = () => {
     userPosts,
   } = useSelector((state) => ({ ...state.channel }));
 
-  const { primaryColor, secondaryColor } = useSelector((state) => ({
-    ...state.colors,
-  }));
+  const { primaryColor, secondaryColor } = useSelector(selectColors);
 
   return (
     <Grid
@@ -26,13 +25,13 @@ const App = () => {
       style={{ background: secondaryColor }}
     >
       <ColorPanel
-        key={currentUser && currentUser.name}
-        currentUser={currentUser}
-        // primaryColor={primaryColor}
-        // secondaryColor={secondaryColor}
+      // key={currentUser?.name}
+      // currentUser={currentUser}
+      // primaryColor={primaryColor}
+      // secondaryColor={secondaryColor}
       />
       <SidePanel
-        key={currentUser && currentUser.uid}
+        key={currentUser?.uid}
         currentUser={currentUser}
         primaryColor={primaryColor}
       />
